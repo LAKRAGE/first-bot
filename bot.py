@@ -32,7 +32,7 @@ async def on_command_error(ctx, error):
         await ctx.send('Invalid Command')
 
 
-        
+
 
 
 @client.command()
@@ -73,7 +73,7 @@ async def rps(ctx,*,choice):
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount : int):
     await ctx.channel.purge(limit=amount)
-    await ctx.send (f'{amount} messages have been deleted!')
+    await ctx.send(f'{amount} messages have been deleted!')
 @client.command()
 async def about(ctx):
     await ctx.send(f'Hey! I am new in this world. LAKRAGE gave me my life. I am under development and one day I will be perfect!')
@@ -109,8 +109,45 @@ async def unload(ctx, extension):
         client.unload_extension(f'cogs.{extension}')
 
 for filename in os.listdir('./cogs'):
+
     if filename.endswith('py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def mute(ctx, member: discord.Member=None):
+    role = discord.utils.get(ctx.guild.roles, name="Muted")
+    if not member:
+        await ctx.send("Please specify a member")
+        return
+    await member.add_roles(role)
+    await ctx.send('Added Roles!')
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def unmute(ctx, member: discord.Member=None):
+    role = discord.utils.get(ctx.guild.roles, name="Muted")
+    if not member:
+        await ctx.send("Please specify a member")
+        return
+    await member.remove_roles(role)
+    await ctx.send('Removed Roles!')
+
+
+@client.command()
+async def coinflip(ctx):
+    choices = ["Heads","Tails"]
+    randomcoin = random.choice(choices)
+    await ctx.send(randomcoin)
+
+@client.event
+async def on_member_join(member):
+    channel = discord.utils.get(member.guild.channels, name="welcome")
+    await channel.send(f'Welcome, {member.mention} to the server!')
+    roles = discord.utils.get(member.guild.roles, name="VISITOR")
+    await member.add_roles(roles)
+@client.event
+async def on_member_remove(member):
+    channel = discord.utils.get(member.guild.channels, name="welcome")
+    await channel.send(f'Goodbye, {member}!')
 
 
 
@@ -124,4 +161,6 @@ for filename in os.listdir('./cogs'):
 
 
 
-client.run('NzI2NDIwNzQyNzYxMzQ5MTUw.XvdCEQ.h269XxLAg26lALG_1ZTVur9qJmE')
+
+
+client.run('NzI2NDIwNzQyNzYxMzQ5MTUw.XvifWw.7ET0PYIb18LK9iunIT_z87ZkDe8')
